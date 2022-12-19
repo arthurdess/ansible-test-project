@@ -1,16 +1,11 @@
-# cloud.yml 
----
-#adfasdf
 - hosts: all
   become: true
   tasks:
-  # Update, Upgrade & Install packages
     - name: Update & upgrade packages
       ansible.builtin.apt:
-        upgrade: yes
-        update_cache: yes
+        upgrade: 'yes'
+        update_cache: 'yes'
         cache_valid_time: 3600
-      
     - name: Install docker-ce
       ansible.builtin.apt:
         name:
@@ -18,44 +13,35 @@
           - docker-ce-cli
           - containerd.io
         state: present
-        force_apt_get: yes
-
+        force_apt_get: 'yes'
     - name: Install docker-compose
       ansible.builtin.apt:
         name: docker-compose
         state: present
-    
-    # Containers opstarten
     - name: Run container
-      become: True
+      become: true
       shell:
-        cmd: "docker-compose up -d"
+        cmd: docker-compose up -d
         chdir: /mydir/
-    
-    # Install cockpit
     - name: Install cockpit
-      become: True
+      become: true
       ansible.builtin.apt:
-        name: cockpit
+        name: cockpitA
         state: present
-
     - name: Start cockpit
       ansible.builtin.service:
         name:
           - cockpit
           - cockpit.socket
         state: started
-
-    # Install cockpit-docker
     - name: Download dotnet
       ansible.builtin.get_url:
-        url: https://launchpad.net/ubuntu/+source/cockpit/215-1~ubuntu19.10.1/+build/18889196/+files/cockpit-docker_215-1~ubuntu19.10.1_all.deb
+        url: >-
+          https://launchpad.net/ubuntu/+source/cockpit/215-1~ubuntu19.10.1/+build/18889196/+files/cockpit-docker_215-1~ubuntu19.10.1_all.deb
         dest: /home/cockpit-docker_215-1~ubuntu19.10.1_all.deb
-
     - name: Install prerequisites for Ansible to install .deb via apt module
       ansible.builtin.apt:
         name: xz-utils
-
     - name: Installing Agent
       ansible.builtin.apt:
         deb: /home/cockpit-docker_215-1~ubuntu19.10.1_all.deb
