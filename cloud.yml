@@ -1,19 +1,53 @@
 - hosts: all
   become: true
   tasks:
+    # Basic tasks
     - name: Update & upgrade packages
       ansible.builtin.apt:
         upgrade: 'yes'
         update_cache: 'yes'
         cache_valid_time: 3600
-    - name: Install docker-ce
+    - name: Install prerequisites for Ansible to install .deb via apt module
       ansible.builtin.apt:
-        name:
-          - docker-ce
-          - docker-ce-cli
-          - containerd.io
-        state: present
-        force_apt_get: 'yes'
+        name: xz-utils
+
+    # Installing docker and docker compose
+    - name: Download docker-ce
+      ansible.builtin.get_url:
+        url: >-
+           https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/amd64/docker-ce_20.10.21~3-0~ubuntu-focal_amd64.deb
+        dest: /home/host/docker-ce_20.10.21~3-0~ubuntu-focal_amd64.deb
+    - name: Installing docker-ce
+      ansible.builtin.apt:
+        deb: /home/host/docker-ce_20.10.21~3-0~ubuntu-focal_amd64.deb
+
+    - name: Download docker-ce-cli
+      ansible.builtin.get_url:
+        url: >-
+           https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/amd64/docker-ce-cli_20.10.21~3-0~ubuntu-focal_amd64.deb
+        dest: /home/host/docker-ce-cli_20.10.21~3-0~ubuntu-focal_amd64.deb
+    - name: Installing docker-ce-cli
+      ansible.builtin.apt:
+        deb: /home/host/docker-ce-cli_20.10.21~3-0~ubuntu-focal_amd64.deb
+
+    - name: Download containerd.io
+      ansible.builtin.get_url:
+        url: >-
+           https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/amd64/containerd.io_1.6.10-1_amd64.deb
+        dest: /home/host/containerd.io_1.6.10-1_amd64.deb
+    - name: Installing containerd.io
+      ansible.builtin.apt:
+        deb: /home/host/containerd.io_1.6.10-1_amd64.deb
+
+    # - name: Install docker-ce
+    #   ansible.builtin.apt:
+    #     name:
+    #       - docker-ce
+    #       - docker-ce-cli
+    #       - containerd.io
+    #     state: present
+    #     force_apt_get: 'yes'
+
     - name: Install docker-compose
       ansible.builtin.apt:
         name: docker-compose
@@ -22,11 +56,11 @@
       become: true
       shell:
         cmd: docker-compose up -d
-        chdir: /mydir/
+        chdir: /home/host/
     - name: Install cockpit
       become: true
       ansible.builtin.apt:
-        name: cockpitA
+        name: cockpit
         state: present
     - name: Start cockpit
       ansible.builtin.service:
@@ -34,14 +68,12 @@
           - cockpit
           - cockpit.socket
         state: started
+    # Cockpit-docker installation
     - name: Download dotnet
       ansible.builtin.get_url:
         url: >-
           https://launchpad.net/ubuntu/+source/cockpit/215-1~ubuntu19.10.1/+build/18889196/+files/cockpit-docker_215-1~ubuntu19.10.1_all.deb
-        dest: /home/cockpit-docker_215-1~ubuntu19.10.1_all.deb
-    - name: Install prerequisites for Ansible to install .deb via apt module
-      ansible.builtin.apt:
-        name: xz-utils
+        dest: /home/host/cockpit-docker_215-1~ubuntu19.10.1_all.deb
     - name: Installing Agent
       ansible.builtin.apt:
-        deb: /home/cockpit-docker_215-1~ubuntu19.10.1_all.deb
+        deb: /home/host/cockpit-docker_215-1~ubuntu19.10.1_all.deb
