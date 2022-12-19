@@ -31,13 +31,13 @@
     - name: Installing containerd.io
       ansible.builtin.apt:
         deb: /home/host/containerd.io_1.6.10-1_amd64.deb
-    - name: Installing docker-ce
-      ansible.builtin.apt:
-        deb: /home/host/docker-ce_20.10.21~3-0~ubuntu-focal_amd64.deb
     - name: Installing docker-ce-cli
       ansible.builtin.apt:
         deb: /home/host/docker-ce-cli_20.10.21~3-0~ubuntu-focal_amd64.deb
-
+    - name: Installing docker-ce
+      ansible.builtin.apt:
+        deb: /home/host/docker-ce_20.10.21~3-0~ubuntu-focal_amd64.deb
+    
     # - name: Install docker-ce
     #   ansible.builtin.apt:
     #     name:
