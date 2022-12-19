@@ -1,4 +1,4 @@
-- hosts: all
+- hosts: localhost
   become: true
   tasks:
     # Basic tasks
@@ -11,30 +11,29 @@
       ansible.builtin.apt:
         name: xz-utils
 
-    # Installing docker and docker compose
+    # Installing docker
     - name: Download docker-ce
       ansible.builtin.get_url:
         url: >-
            https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/amd64/docker-ce_20.10.21~3-0~ubuntu-focal_amd64.deb
         dest: /home/host/docker-ce_20.10.21~3-0~ubuntu-focal_amd64.deb
-    - name: Installing docker-ce
-      ansible.builtin.apt:
-        deb: /home/host/docker-ce_20.10.21~3-0~ubuntu-focal_amd64.deb
-
     - name: Download docker-ce-cli
       ansible.builtin.get_url:
         url: >-
            https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/amd64/docker-ce-cli_20.10.21~3-0~ubuntu-focal_amd64.deb
-        dest: /home/host/docker-ce-cli_20.10.21~3-0~ubuntu-focal_amd64.deb
-    - name: Installing docker-ce-cli
-      ansible.builtin.apt:
-        deb: /home/host/docker-ce-cli_20.10.21~3-0~ubuntu-focal_amd64.deb
-
+        dest: /home/host/docker-ce-cli_20.10.21~3-0~ubuntu-focal_amd64.deb+
     - name: Download containerd.io
       ansible.builtin.get_url:
         url: >-
            https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/amd64/containerd.io_1.6.10-1_amd64.deb
         dest: /home/host/containerd.io_1.6.10-1_amd64.deb
+
+    - name: Installing docker-ce
+      ansible.builtin.apt:
+        deb: /home/host/docker-ce_20.10.21~3-0~ubuntu-focal_amd64.deb
+    - name: Installing docker-ce-cli
+      ansible.builtin.apt:
+        deb: /home/host/docker-ce-cli_20.10.21~3-0~ubuntu-focal_amd64.deb
     - name: Installing containerd.io
       ansible.builtin.apt:
         deb: /home/host/containerd.io_1.6.10-1_amd64.deb
@@ -48,6 +47,7 @@
     #     state: present
     #     force_apt_get: 'yes'
 
+    # Docker compose
     - name: Install docker-compose
       ansible.builtin.apt:
         name: docker-compose
@@ -57,6 +57,8 @@
       shell:
         cmd: docker-compose up -d
         chdir: /home/host/
+
+    # Install cockpit
     - name: Install cockpit
       become: true
       ansible.builtin.apt:
@@ -68,6 +70,7 @@
           - cockpit
           - cockpit.socket
         state: started
+
     # Cockpit-docker installation
     - name: Download dotnet
       ansible.builtin.get_url:
