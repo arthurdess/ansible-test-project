@@ -52,11 +52,25 @@
     - name: Download cockpit
       ansible.builtin.get_url:
         url: >-
-          https://launchpad.net/ubuntu/+source/cockpit/215-1~ubuntu19.10.1/+build/18889196/+files/cockpit-docker_215-1~ubuntu19.10.1_all.deb
+          http://archive.ubuntu.com/ubuntu/pool/universe/c/cockpit/cockpit_215-1_all.deb
         dest: /home/host/cockpit-docker_215-1~ubuntu19.10.1_all.deb
     - name: Installing cockpit
       ansible.builtin.apt:
-        deb: /home/host/cockpit-docker_215-1~ubuntu19.10.1_all.deb
+        deb: /home/host/cockpit_215-1_all.deb
+    - name: Download cockpit-docker
+      ansible.builtin.get_url:
+        url: >-
+          https://launchpad.net/ubuntu/+source/cockpit/215-1~ubuntu19.10.1/+build/18889196/+files/cockpit-docker_215-1~ubuntu19.10.1_all.deb
+        dest: /home/host/cockpit-docker_215-1~ubuntu19.10.1_all.deb
+    - name: Installing cockpit-docker
+      ansible.builtin.apt:
+        deb: /home/host/
+    
+# Jenkins passwd copy
+    - name: Copy password jenkins
+      copy:
+        src: jenkins:/var/jenkins_home/secrets/initialAdminPassword
+        dest: /home/host/
 
 # Prometheus
 #   vars:
