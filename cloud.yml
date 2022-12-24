@@ -53,7 +53,7 @@
       ansible.builtin.get_url:
         url: >-
           http://archive.ubuntu.com/ubuntu/pool/universe/c/cockpit/cockpit_215-1_all.deb
-        dest: /home/host/cockpit-docker_215-1~ubuntu19.10.1_all.deb
+        dest: /home/host/cockpit_215-1_all.deb
     - name: Installing cockpit
       ansible.builtin.apt:
         deb: /home/host/cockpit_215-1_all.deb
