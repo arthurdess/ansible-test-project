@@ -64,7 +64,7 @@
         dest: /home/host/cockpit-docker_215-1~ubuntu19.10.1_all.deb
     - name: Installing cockpit-docker
       ansible.builtin.apt:
-        deb: /home/host/
+        deb: /home/host/cockpit-docker_215-1~ubuntu19.10.1_all.deb
     
 # Jenkins passwd copy
     - name: Copy password jenkins
