@@ -61,12 +61,11 @@
     - name: Installing cockpit-docker
       ansible.builtin.apt:
         deb: /home/host/cockpit-docker_215-1~ubuntu19.10.1_all.deb
-# Copy jenkins password
-    - name: Copy password jenkins
+    - name: CP jenkins pwd
       ansible.builtin.shell: >-
         docker cp jenkins:/var/jenkins_home/secrets/initialAdminPassword
         /home/host/
-        
+
 # Prometheus
 #   vars:
 #     firewall_allowed_tcp_ports:
