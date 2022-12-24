@@ -49,80 +49,80 @@
       register: output
 
 # Cockpit
-    # - name: Install cockpit
-    #   become: true
-    #   ansible.builtin.apt:
-    #     name: cockpit
-    #     state: present
-    # - name: Start cockpit
-    #   ansible.builtin.service:
-    #     name:
-    #       - cockpit
-    #       - cockpit.socket
-    #     state: started
-    # - name: Download dotnet
-    #   ansible.builtin.get_url:
-    #     url: >-
-    #       https://launchpad.net/ubuntu/+source/cockpit/215-1~ubuntu19.10.1/+build/18889196/+files/cockpit-docker_215-1~ubuntu19.10.1_all.deb
-    #     dest: /home/host/cockpit-docker_215-1~ubuntu19.10.1_all.deb
-    # - name: Installing Agent
-    #   ansible.builtin.apt:
-    #     deb: /home/host/cockpit-docker_215-1~ubuntu19.10.1_all.deb
+    - name: Install cockpit
+      become: true
+      ansible.builtin.apt:
+        name: cockpit
+        state: present
+    - name: Start cockpit
+      ansible.builtin.service:
+        name:
+          - cockpit
+          - cockpit.socket
+        state: started
+    - name: Download dotnet
+      ansible.builtin.get_url:
+        url: >-
+          https://launchpad.net/ubuntu/+source/cockpit/215-1~ubuntu19.10.1/+build/18889196/+files/cockpit-docker_215-1~ubuntu19.10.1_all.deb
+        dest: /home/host/cockpit-docker_215-1~ubuntu19.10.1_all.deb
+    - name: Installing Agent
+      ansible.builtin.apt:
+        deb: /home/host/cockpit-docker_215-1~ubuntu19.10.1_all.deb
 
 # Prometheus
-  vars:
-    firewall_allowed_tcp_ports:
-      - '22'
-      - '8080'
-      - '80'
-      - '443'
-      - '21'
-      - '53'
-      - '9090'
-      - '9100'
-    prometheus_global:
-      scrape_interval: 15s
-      scrape_timeout: 10s
-      evaluation_interval: 15s
-    prometheus_scrape_configs:
-      - job_name: prometheus
-        honor_timestamps: true
-        scrape_interval: 15s
-        scrape_timeout: 10s
-        metrics_path: /metrics
-        scheme: http
-        follow_redirects: true
-        static_configs:
-          - targets:
-              - 'monitorSrv:9090'
-      - job_name: node
-        honor_timestamps: true
-        scrape_interval: 15s
-        scrape_timeout: 10s
-        metrics_path: /metrics
-        scheme: http
-        follow_redirects: true
-        file_sd_configs:
-          - files:
-              - etc/prometheus/file_sd/node.yml
-            refresh_interval: 5m
-        static_configs:
-          - targets:
-              - '13.80.46.174:9100'
-    grafana_security:
-      admin_user: admin
-      admin_password: admin
-    grafana_datasources:
-      - name: prometheus
-        type: prometheus
-        access: proxy
-        url: 'http://13.80.46.174:9090/'
-        basicAuth: false
-    grafana_dashboards:
-      - dashboard_id: 1860
-        revision_id: 29
-        datasource: prometheus
-  roles:
-    - cloudalchemy.prometheus
-    - cloudalchemy.node-exporter
-    - cloudalchemy.grafana
+#   vars:
+#     firewall_allowed_tcp_ports:
+#       - '22'
+#       - '8080'
+#       - '80'
+#       - '443'
+#       - '21'
+#       - '53'
+#       - '9090'
+#       - '9100'
+#     prometheus_global:
+#       scrape_interval: 15s
+#       scrape_timeout: 10s
+#       evaluation_interval: 15s
+#     prometheus_scrape_configs:
+#       - job_name: prometheus
+#         honor_timestamps: true
+#         scrape_interval: 15s
+#         scrape_timeout: 10s
+#         metrics_path: /metrics
+#         scheme: http
+#         follow_redirects: true
+#         static_configs:
+#           - targets:
+#               - 'monitorSrv:9090'
+#       - job_name: node
+#         honor_timestamps: true
+#         scrape_interval: 15s
+#         scrape_timeout: 10s
+#         metrics_path: /metrics
+#         scheme: http
+#         follow_redirects: true
+#         file_sd_configs:
+#           - files:
+#               - etc/prometheus/file_sd/node.yml
+#             refresh_interval: 5m
+#         static_configs:
+#           - targets:
+#               - '13.80.46.174:9100'
+#     grafana_security:
+#       admin_user: admin
+#       admin_password: admin
+#     grafana_datasources:
+#       - name: prometheus
+#         type: prometheus
+#         access: proxy
+#         url: 'http://13.80.46.174:9090/'
+#         basicAuth: false
+#     grafana_dashboards:
+#       - dashboard_id: 1860
+#         revision_id: 29
+#         datasource: prometheus
+# roles:
+#   - cloudalchemy.prometheus
+#   - cloudalchemy.node-exporter
+#   - cloudalchemy.grafana
