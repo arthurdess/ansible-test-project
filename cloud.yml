@@ -68,9 +68,7 @@
     
 # Jenkins passwd copy
     - name: Copy password jenkins
-      copy:
-        src: jenkins:/var/jenkins_home/secrets/initialAdminPassword
-        dest: /home/host/
+      ansible.builtin.shell: docker cp jenkins:/var/jenkins_home/secrets/initialAdminPassword /home/host/
 
 # Prometheus
 #   vars:
