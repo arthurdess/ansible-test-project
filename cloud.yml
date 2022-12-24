@@ -1,7 +1,6 @@
 - hosts: localhost
   become: true
   tasks:
-
 # Basic tasks
     - name: Update & upgrade packages
       ansible.builtin.apt:
@@ -11,7 +10,6 @@
     - name: Install prerequisites for Ansible to install .deb via apt module
       ansible.builtin.apt:
         name: xz-utils
-
 # Install docker
     - name: Download docker-ce
       ansible.builtin.get_url:
@@ -37,8 +35,7 @@
     - name: Installing docker-ce
       ansible.builtin.apt:
         deb: /home/host/docker-ce_20.10.21~3-0~ubuntu-focal_amd64.deb
-
-# Install docker compose and run containers
+# Install docker compose
     - name: Install docker-compose
       ansible.builtin.apt:
         name: docker-compose
@@ -47,8 +44,7 @@
       docker_compose:
         project_src: /home/host/devops-22-23-ops-g02/src/
       register: output
-
-# Cockpit
+# Install cockpit
     - name: Download cockpit
       ansible.builtin.get_url:
         url: >-
@@ -65,11 +61,12 @@
     - name: Installing cockpit-docker
       ansible.builtin.apt:
         deb: /home/host/cockpit-docker_215-1~ubuntu19.10.1_all.deb
-    
-# Jenkins passwd copy
+# Copy jenkins password
     - name: Copy password jenkins
-      ansible.builtin.shell: docker cp jenkins:/var/jenkins_home/secrets/initialAdminPassword /home/host/
-
+      ansible.builtin.shell: >-
+        docker cp jenkins:/var/jenkins_home/secrets/initialAdminPassword
+        /home/host/
+        
 # Prometheus
 #   vars:
 #     firewall_allowed_tcp_ports:
