@@ -67,59 +67,68 @@
         /home/host/
 
 # Prometheus
-#   vars:
-#     firewall_allowed_tcp_ports:
-#       - '22'
-#       - '8080'
-#       - '80'
-#       - '443'
-#       - '21'
-#       - '53'
-#       - '9090'
-#       - '9100'
-#     prometheus_global:
-#       scrape_interval: 15s
-#       scrape_timeout: 10s
-#       evaluation_interval: 15s
-#     prometheus_scrape_configs:
-#       - job_name: prometheus
-#         honor_timestamps: true
-#         scrape_interval: 15s
-#         scrape_timeout: 10s
-#         metrics_path: /metrics
-#         scheme: http
-#         follow_redirects: true
-#         static_configs:
-#           - targets:
-#               - 'monitorSrv:9090'
-#       - job_name: node
-#         honor_timestamps: true
-#         scrape_interval: 15s
-#         scrape_timeout: 10s
-#         metrics_path: /metrics
-#         scheme: http
-#         follow_redirects: true
-#         file_sd_configs:
-#           - files:
-#               - etc/prometheus/file_sd/node.yml
-#             refresh_interval: 5m
-#         static_configs:
-#           - targets:
-#               - '13.80.46.174:9100'
-#     grafana_security:
-#       admin_user: admin
-#       admin_password: admin
-#     grafana_datasources:
-#       - name: prometheus
-#         type: prometheus
-#         access: proxy
-#         url: 'http://13.80.46.174:9090/'
-#         basicAuth: false
-#     grafana_dashboards:
-#       - dashboard_id: 1860
-#         revision_id: 29
-#         datasource: prometheus
-# roles:
-#   - cloudalchemy.prometheus
-#   - cloudalchemy.node-exporter
-#   - cloudalchemy.grafana
+  vars:
+    firewall_allowed_tcp_ports:
+      - "22"
+      - "8080"
+      - "80"
+      - "443"
+      - "21"
+      - "53"
+      - "9090"
+      - "9100"
+
+    prometheus_global:
+      scrape_interval: 15s
+      scrape_timeout: 10s
+      evaluation_interval: 15s
+    prometheus_scrape_configs:
+    - job_name: prometheus
+      honor_timestamps: true
+      scrape_interval: 15s
+      scrape_timeout: 10s
+      metrics_path: /metrics
+      scheme: http
+      follow_redirects: true
+      static_configs:
+      - targets:
+        - monitorSrv:9090
+    - job_name: node
+      honor_timestamps: true
+      scrape_interval: 15s
+      scrape_timeout: 10s
+      metrics_path: /metrics
+      scheme: http
+      follow_redirects: true
+      file_sd_configs:
+      - files:
+        - etc/prometheus/file_sd/node.yml
+        refresh_interval: 5m
+      static_configs:
+      - targets:
+        - 192.168.56.10:9100
+        - 192.168.56.11:9100
+        - 192.168.56.12:9100
+
+    
+    grafana_security:
+      admin_user: admin
+      admin_password: admin
+
+    grafana_datasources:
+      - name: prometheus
+        type: prometheus
+        access: proxy
+        url: 'http://192.168.56.12:9090/'
+        basicAuth: false
+
+    grafana_dashboards:
+      - dashboard_id: 1860
+        revision_id: 29
+        datasource: prometheus
+
+
+  roles:
+    - cloudalchemy.prometheus
+    - cloudalchemy.node-exporter
+    - cloudalchemy.grafana
